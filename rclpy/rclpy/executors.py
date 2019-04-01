@@ -446,6 +446,7 @@ class Executor:
                     entity_count.num_timers,
                     entity_count.num_clients,
                     entity_count.num_services,
+                    entity_count.num_events,
                     self._context.handle)
 
                 entities = {
