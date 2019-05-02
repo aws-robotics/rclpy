@@ -14,8 +14,10 @@
 
 from typing import TypeVar
 
+from rclpy.callback_groups import CallbackGroup
 from rclpy.impl.implementation_singleton import rclpy_implementation as _rclpy
 from rclpy.qos import QoSProfile
+from rclpy.qos_event import PublisherEventCallbacks
 
 MsgType = TypeVar('MsgType')
 
@@ -28,7 +30,9 @@ class Publisher:
         msg_type: MsgType,
         topic: str,
         qos_profile: QoSProfile,
-        node_handle
+        node_handle,
+        event_callbacks: PublisherEventCallbacks,
+        callback_group: CallbackGroup,
     ) -> None:
         """
         Create a container for a ROS publisher.
@@ -51,6 +55,9 @@ class Publisher:
         self.topic = topic
         self.qos_profile = qos_profile
         self.node_handle = node_handle
+
+        self.event_handlers = event_callbacks.create_event_handlers(
+            callback_group, publisher_handle)
 
     def publish(self, msg: MsgType) -> None:
         """
