@@ -59,7 +59,7 @@ if TYPE_CHECKING:
     from rclpy.node import Node  # noqa: F401
 
 
-def init(*, args: List[str] = None, context: Context = None) -> None:
+class init:
     """
     Initialize ROS communications for a given context.
 
@@ -67,10 +67,18 @@ def init(*, args: List[str] = None, context: Context = None) -> None:
     :param context: The context to initialize. If ``None``, then the default context is used
         (see :func:`.get_default_context`).
     """
-    context = get_default_context() if context is None else context
-    # imported locally to avoid loading extensions on module import
-    from rclpy.impl.implementation_singleton import rclpy_implementation
-    return rclpy_implementation.rclpy_init(args if args is not None else sys.argv, context.handle)
+    def init(self, *, args: List[str] = None, context: Context = None) -> None:
+        self._context = get_default_context() if context is None else context
+        # imported locally to avoid loading extensions on module import
+        from rclpy.impl.implementation_singleton import rclpy_implementation
+        return rclpy_implementation.rclpy_init(
+            args if args is not None else sys.argv, context.handle)
+
+    def __enter__(self, *, args: List[str] = None, context: Context = None) -> None:
+        pass
+
+    def __exit__(self):
+        pass
 
 
 # The global spin functions need an executor to do the work
